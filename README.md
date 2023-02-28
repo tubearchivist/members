@@ -19,6 +19,8 @@ version: '3.5'
         - "TZ=America/New_York"
 ```
 
+For `restart` policy use *always*, *on-failure* or *unless-stopped* to guarantee the listener stays open.
+
 ## Configure
 You can configure the members client with various environment variables:
 - **MB_TOKEN**: This is the access token you can find on your [members profile page](https://members.tubearchivist.com/profile/).

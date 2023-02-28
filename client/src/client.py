@@ -1,6 +1,7 @@
 """members websocket client"""
 
 import json
+import sys
 from datetime import datetime
 from os import environ
 from time import sleep
@@ -114,6 +115,8 @@ def on_close(ws_connection, close_status_code, close_msg):
     print(f"[closed][{get_timestamp()}] connection to {MB_HOST} closed")
     print(f"[closed] status code: {close_status_code}")
     print(f"[closed] message: {close_msg}")
+    sleep(10)
+    sys.exit(1)
 
 
 def on_open(ws_connection):
