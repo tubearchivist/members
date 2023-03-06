@@ -14,6 +14,7 @@ WELCOME = """
 ----------------------------
 TUBE ARCHIVIST MEMBER CLIENT
 ----------------------------
+v0.0.1
 """
 
 MB_HOST = "members.tubearchivist.com"
