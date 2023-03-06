@@ -1,7 +1,7 @@
 #!/bin/bash
 # deploy client container
 
-test_host="blackhole.locyl"
+test_host="blackhole.local"
 
 function sync_test {
     # sync client to blackhole.local
@@ -13,8 +13,9 @@ function sync_test {
         --exclude "db.sqlite3" \
         . -e ssh "$test_host":tubearchivist-members
 
-    ssh $test_host \
-        "docker compose up -d --build"
+    ssh "$test_host" \
+        'docker build -t bbilly1/tubearchivist-client tubearchivist-members'
+    ssh $test_host "docker compose up -d"
 }
 
 function sync_production {
@@ -24,10 +25,23 @@ function sync_production {
         sudo systemctl start docker
     fi
 
+    echo "latest tags:"
+    git tag | tail -n 5 | sort -r
+
+    printf "\ncreate new version:\n"
+    read -r VERSION
+
+    echo "push new tag: $VERSION?"
+    read -rn 1
+
+    git tag -a "$VERSION" -m "new release version $VERSION"
+    git push origin "$VERSION"
+
     # start build
     sudo docker buildx build \
         --platform linux/amd64,linux/arm64 \
-        -t bbilly1/tubearchivist-client --push client
+        -t bbilly1/tubearchivist-client:"$VERSION" \
+        -t bbilly1/tubearchivist-client --push .
 }
 
 if [[ $1 == "test" ]]; then
