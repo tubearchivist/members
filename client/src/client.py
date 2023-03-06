@@ -48,7 +48,7 @@ class TubeArchivist:
 
     TA_URL = environ.get("TA_URL").rstrip("/")
     HEADERS = {"Authorization": "Token " + environ.get("TA_TOKEN")}
-    RETRY = 12
+    RETRY = 10
 
     def ping(self):
         """verify TA connection"""
@@ -70,7 +70,7 @@ class TubeArchivist:
             ):
                 print(error)
 
-            sleep(10)
+            sleep(3)
 
         print("[startup] connection to TA failed.")
         raise ConnectionError
@@ -142,8 +142,12 @@ if __name__ == "__main__":
         on_close=on_close,
         header={"Authorization": "Token " + environ.get("MB_TOKEN")},
     )
-
-    connection.run_forever(dispatcher=rel, reconnect=10)
+    connection.run_forever(
+        dispatcher=rel,
+        reconnect=10,
+        ping_interval=60,
+        ping_timeout=10,
+    )
     rel.signal(2, rel.abort)
     rel.signal(15, rel.abort)
     rel.dispatch()
