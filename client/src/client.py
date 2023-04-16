@@ -9,6 +9,7 @@ from time import sleep
 import rel
 import requests
 import websocket
+from src.client_types import DownloadPostType
 
 WELCOME = """
 ----------------------------
@@ -17,12 +18,12 @@ TUBE ARCHIVIST MEMBER CLIENT
 v0.0.1
 """
 
-MB_HOST = "members.tubearchivist.com"
+MB_HOST: str = "members.tubearchivist.com"
 
 
-def check_expected_env():
+def check_expected_env() -> None:
     """check all expected environment variables are set"""
-    env_vars = ["MB_TOKEN", "TA_URL", "TA_TOKEN"]
+    env_vars: list[str] = ["MB_TOKEN", "TA_URL", "TA_TOKEN"]
     for var in env_vars:
         if not environ.get(var):
             print(f"[startup] missing expected environment variable: {var}")
@@ -31,7 +32,7 @@ def check_expected_env():
     print("[startup] all expected environment vars are set")
 
 
-def get_ws_url():
+def get_ws_url() -> str:
     """return websocket url, local testing and remote production"""
     if environ.get("MB_TESTING"):
         return "ws://members.tubearchivist.local/ws/notification/"
@@ -39,7 +40,7 @@ def get_ws_url():
     return f"wss://{MB_HOST}/ws/notification/"
 
 
-def get_timestamp():
+def get_timestamp() -> str:
     """return formatted now timestamp"""
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -47,11 +48,11 @@ def get_timestamp():
 class TubeArchivist:
     """interact with TA"""
 
-    TA_URL = environ.get("TA_URL").rstrip("/")
-    HEADERS = {"Authorization": "Token " + environ.get("TA_TOKEN")}
-    RETRY = 10
+    TA_URL: str = environ["TA_URL"].rstrip("/")
+    HEADERS: dict[str, str] = {"Authorization": "Token " + environ["TA_TOKEN"]}
+    RETRY: int = 10
 
-    def ping(self):
+    def ping(self) -> None:
         """verify TA connection"""
         url = f"{self.TA_URL}/api/ping/"
         print(f"[startup] connecting to TA on url {url}")
@@ -76,12 +77,12 @@ class TubeArchivist:
         print("[startup] connection to TA failed.")
         raise ConnectionError
 
-    def add_to_queue(self, video_ids):
+    def add_to_queue(self, video_ids: list[str]) -> None:
         """add list of video ids to queue"""
-        to_download = {
+        to_download: DownloadPostType = {
             "data": [{"youtube_id": i, "status": "pending"} for i in video_ids]
         }
-        url = f"{self.TA_URL}/api/download/"
+        url: str = f"{self.TA_URL}/api/download/"
         response = requests.post(
             url, json=to_download, headers=self.HEADERS, timeout=10
         )
@@ -141,7 +142,7 @@ if __name__ == "__main__":
         on_message=on_message,
         on_error=on_error,
         on_close=on_close,
-        header={"Authorization": "Token " + environ.get("MB_TOKEN")},
+        header={"Authorization": "Token " + environ["MB_TOKEN"]},
     )
     connection.run_forever(
         dispatcher=rel,
