@@ -9,7 +9,7 @@ from time import sleep
 import rel
 import requests
 import websocket
-from src.client_types import DownloadPostType
+from client_types import DownloadPostType
 
 WELCOME = """
 ----------------------------
