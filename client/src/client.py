@@ -97,7 +97,7 @@ class TubeArchivist:
         """build ta url"""
         url: str = f"{self.TA_URL}/api/download/"
         if environ.get("AUTOSTART"):
-            url = url + "?autostart"
+            url = url + "?autostart=true"
 
         return url
 
