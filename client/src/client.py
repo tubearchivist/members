@@ -82,7 +82,7 @@ class TubeArchivist:
         to_download: DownloadPostType = {
             "data": [{"youtube_id": i, "status": "pending"} for i in video_ids]
         }
-        url: str = f"{self.TA_URL}/api/download/"
+        url: str = self._build_url()
         response = requests.post(
             url, json=to_download, headers=self.HEADERS, timeout=10
         )
@@ -92,6 +92,14 @@ class TubeArchivist:
             return
 
         print(f"[message] video ids sent to TA: {response.text}\n")
+
+    def _build_url(self) -> str:
+        """build ta url"""
+        url: str = f"{self.TA_URL}/api/download/"
+        if environ.get("AUTOSTART"):
+            url = url + "?autostart"
+
+        return url
 
 
 def on_message(ws_connection, message):
