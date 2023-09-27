@@ -9,7 +9,7 @@ from time import sleep
 import rel
 import requests
 import websocket
-from client_types import DownloadPostType
+from src.client_types import DownloadPostType
 
 WELCOME = """
 ----------------------------
@@ -91,7 +91,7 @@ class TubeArchivist:
             print(f"[message] TA responded: {response.text}")
             return
 
-        print(f"[message] video ids sent to TA: {response.text}\n")
+        print(f"[message] video ids sent to TA: {response.text}")
 
     def _build_url(self) -> str:
         """build ta url"""
