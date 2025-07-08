@@ -120,6 +120,14 @@ def on_error(ws_connection, error):
     """error found"""
     # pylint: disable=unused-argument
     print(f"[error][{get_timestamp()}] {error}")
+    if error.status_code == 403:
+        if environ.get("MB_TESTING") is None:
+            while True:
+                print(f"[error][{error.status_code}] Invalid auth token")
+                sleep(60)
+
+        sleep(10)
+        sys.exit(1)
 
 
 def on_close(ws_connection, close_status_code, close_msg):
@@ -128,7 +136,7 @@ def on_close(ws_connection, close_status_code, close_msg):
     print(f"[closed][{get_timestamp()}] connection to {MB_HOST} closed")
     print(f"[closed] status code: {close_status_code}")
     print(f"[closed] message: {close_msg}")
-    sleep(10)
+    sleep(60)
     sys.exit(1)
 
 
