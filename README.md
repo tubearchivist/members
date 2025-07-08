@@ -24,7 +24,7 @@ For `restart` policy use *always*, *on-failure* or *unless-stopped* to guarantee
 ## Configure
 You can configure the members client with various environment variables:
 - **MB_TOKEN**: This is the access token you can find on your [members profile page](https://members.tubearchivist.com/profile/).
-- **TA_URL**: Define the URL where your Tube Archivist instance is reachable, add protocoll and port number if needed.
+- **TA_URL**: Define the URL where your Tube Archivist instance is reachable, add protocol and port number if needed.
 - **TA_TOKEN**: This is the access token for your Tube Archivist server, you can find that on the settings page.
 - **TZ**: Defaults to UTC, optionally configure your timezone to adjust log output timestamps.
 - **AUTOSTART**: Automatically prioritize and start videos sent from this service, requires Tube Archivist v0.3.6+ for API compatibility. Set to anything, except empty string, e.g. `AUTOSTART=True`.

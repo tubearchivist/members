@@ -1,5 +1,14 @@
 """members websocket client"""
 
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(".env")
+    print("loading local .env file")
+except ModuleNotFoundError:
+    pass
+
+
 import json
 import sys
 from datetime import datetime
@@ -18,7 +27,7 @@ TUBE ARCHIVIST MEMBER CLIENT
 v0.0.3
 """
 
-MB_HOST: str = "members.tubearchivist.com"
+MB_HOST: str = environ.get("MB_URL", "members.tubearchivist.com")
 
 
 def check_expected_env() -> None:
@@ -34,10 +43,8 @@ def check_expected_env() -> None:
 
 def get_ws_url() -> str:
     """return websocket url, local testing and remote production"""
-    if environ.get("MB_TESTING"):
-        return "ws://members.tubearchivist.local/ws/notification/"
-
-    return f"wss://{MB_HOST}/ws/notification/"
+    proto = "ws" if environ.get("MB_TESTING") else "ws"
+    return f"{proto}://{MB_HOST}/ws/notification/"
 
 
 def get_timestamp() -> str:
@@ -79,13 +86,9 @@ class TubeArchivist:
 
     def add_to_queue(self, video_ids: list[str]) -> None:
         """add list of video ids to queue"""
-        to_download: DownloadPostType = {
-            "data": [{"youtube_id": i, "status": "pending"} for i in video_ids]
-        }
+        to_download: DownloadPostType = {"data": [{"youtube_id": i, "status": "pending"} for i in video_ids]}
         url: str = self._build_url()
-        response = requests.post(
-            url, json=to_download, headers=self.HEADERS, timeout=10
-        )
+        response = requests.post(url, json=to_download, headers=self.HEADERS, timeout=10)
         if not response.ok:
             print("[message] failed to send video ids to TA")
             print(f"[message] TA responded: {response.text}")
