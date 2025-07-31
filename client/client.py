@@ -43,7 +43,7 @@ def check_expected_env() -> None:
 
 def get_ws_url() -> str:
     """return websocket url, local testing and remote production"""
-    proto = "ws" if environ.get("MB_TESTING") else "ws"
+    proto = "ws" if environ.get("MB_TESTING") else "wss"
     return f"{proto}://{MB_HOST}/ws/notification/"
 
 
