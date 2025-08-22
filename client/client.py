@@ -165,9 +165,9 @@ if __name__ == "__main__":
     )
     connection.run_forever(
         dispatcher=rel,
-        reconnect=10,
+        reconnect=15,
         ping_interval=60,
-        ping_timeout=10,
+        ping_timeout=30,
     )
     rel.signal(2, rel.abort)
     rel.signal(15, rel.abort)
