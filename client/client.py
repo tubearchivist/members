@@ -24,7 +24,7 @@ WELCOME = """
 ----------------------------
 TUBE ARCHIVIST MEMBER CLIENT
 ----------------------------
-v0.0.4
+v0.0.5
 """
 
 MB_HOST: str = environ.get("MB_URL", "members.tubearchivist.com")
