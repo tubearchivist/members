@@ -1,10 +1,10 @@
 #!/bin/bash
 # deploy client container
 
-test_host="blackhole.local"
+test_host="blackhole.lan"
 
 function sync_test {
-    # sync client to blackhole.local
+    # sync client to blackhole.lan
     rsync -a --progress --delete-after \
         --exclude ".git" \
         --exclude ".mypy_cache" \
@@ -15,7 +15,7 @@ function sync_test {
 
     ssh "$test_host" \
         'docker build -t bbilly1/tubearchivist-client tubearchivist-members'
-    ssh $test_host "docker compose up -d"
+    ssh $test_host "docker compose -f docker/docker-compose.yml up -d"
 }
 
 function sync_production {
