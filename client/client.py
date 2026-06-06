@@ -13,6 +13,7 @@ import json
 import sys
 from datetime import datetime
 from os import environ
+from random import randint
 from time import sleep
 
 import rel
@@ -126,8 +127,18 @@ def on_error(ws_connection, error):
                 print(f"[error][{error.status_code}] Invalid auth token")
                 sleep(60)
 
-        sleep(10)
-        sys.exit(1)
+    else:
+        print(f"[error][{error.status_code}] unhandled error")
+
+    sleep(randint(5, 20))
+    sys.exit(1)
+
+
+def on_reconnect(ws_connection):
+    """backoff jitter on reconnect to avoid server pressure"""
+    # pylint: disable=unused-argument
+    print("[reconnect] try again shortly...")
+    sleep(randint(5, 20))
 
 
 def on_close(ws_connection, close_status_code, close_msg):
@@ -161,6 +172,7 @@ if __name__ == "__main__":
         on_message=on_message,
         on_error=on_error,
         on_close=on_close,
+        on_reconnect=on_reconnect,
         header={"Authorization": "Token " + environ["MB_TOKEN"]},
     )
     connection.run_forever(
